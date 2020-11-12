@@ -1,17 +1,23 @@
 import pokepy
 import json
 
-def getEvolutionChainFromUrl(url):
-    arr = url.split("evolution-chain/")
-    chainId = arr[1].replace("/", "")
-    return int(chainId)
+# api link: https://pokeapi.github.io/pokepy/usage/
+
+#def getEvolutionChainFromUrl(url):
+#    arr = url.split("evolution-chain/")
+#    id = arr[1].replace("/", "")
+#    return int(id)
+
+def getIdFromUrl(url, split_at):
+    arr = url.split(split_at)
+    id = arr[1].replace("/", "")
+    return int(id)
 
 poke_id = 1
 client = pokepy.V2Client()
 pokemon = client.get_pokemon(poke_id)
 pokemon_species = client.get_pokemon_species(poke_id)
-chain_id = getEvolutionChainFromUrl(pokemon_species.evolution_chain.url)
-pokemon_evo = client.get_evolution_chain(chain_id)
+chain_id = getIdFromUrl(pokemon_species.evolution_chain.url, "evolution-chain/")
 
 # JSON - Pokemon Object Data
 jsonFormat = {
@@ -31,7 +37,7 @@ jsonFormat = {
     "gen_origin": pokemon_species.generation.name,
     "growth_rate": pokemon_species.growth_rate.name,
     "hatch_counter": pokemon_species.hatch_counter,
-    "text_entry": "dev_fill",
+    "text_entry": None,
     "moves": []
 }
 
@@ -52,7 +58,8 @@ for e in pokemon.stats:
 # Pokemon Abilities
 for e in pokemon.abilities:
     tmp = {}
-    tmp["name"] = e.ability.name
+    tmp["id"] = getIdFromUrl(e.ability.url, "ability/")
+    #tmp["name"] = e.ability.name
     tmp["is_hidden"] = e.is_hidden
     jsonFormat["abilities"].append(tmp)
 
@@ -73,12 +80,13 @@ jsonFormat["text_entry"] = last_entry
 
 for e in pokemon.moves:
     tmp = {}
-    tmp["name"] = e.move.name
+    #tmp["name"] = e.move.name -- get from move.py
+    tmp["id"] = getIdFromUrl(e.move.url, "move/")
     tmp["level_learned_at"] = e.version_group_details[0].level_learned_at
     tmp["learn_method"] = e.version_group_details[0].move_learn_method.name
     jsonFormat["moves"].append(tmp)
 
-print(json.dumps(jsonFormat))
+print(json.dumps(jsonFormat, ensure_ascii=False))
 
 '''
 print(pokemon.id)
@@ -143,20 +151,4 @@ print(pokemon_species.genera[7].genus)
 print(pokemon_species.generation.name)
 print(pokemon_species.growth_rate.name)
 print(pokemon_species.hatch_counter)
-'''
-
-'''
-# Still need to experiment with evolution since some pokemon have unique evolution properties
-print("Evolution Chain:")
-print(pokemon_evo.chain.species.name)
-for evo_1 in pokemon_evo.chain.evolves_to:
-    for detail in evo_1.evolution_details:
-        print(detail.min_level)
-    print(evo_1.species.name)
-
-    for evo_2 in evo_1.evolves_to:
-        for detail in evo_2.evolution_details:
-            print(detail.min_level)
-        print(evo_2.species.name)
-    #print(evo.evolution_details)
 '''
