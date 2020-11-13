@@ -3,22 +3,27 @@ import pokepy
 import json
 
 client = pokepy.V2Client()
-ability = client.get_ability(1)
+json_chunk = {"abilities": []}
 
-jsonFormat = {
-    "name": ability.name,
-    "effect_change": ability.effect_changes[0][1].effect,
-    "effect_entry": ability.effect_entries[1].effect.replace("\n", " "),
-    "text_entry": "devi_fill"
-}
+for poke_id in range(3):
+    poke_id += 1
+    ability = client.get_ability(poke_id)
 
-# Text Entry
-last_entry = ""
-for e in ability.flavor_text_entries:
-    if e.language.name == "en":
-        last_entry = e.flavor_text
-last_entry = last_entry.replace("\n", " ")
-last_entry = last_entry.replace("\u000c", " ")
-jsonFormat["text_entry"] = last_entry
+    jsonFormat = {
+        "name": ability.name,
+        "effect_entry": ability.effect_entries[1].effect.replace("\n", " "),
+        "text_entry": "devi_fill"
+    }
 
-print (json.dumps(jsonFormat, ensure_ascii=False))
+    # Text Entry
+    last_entry = ""
+    for e in ability.flavor_text_entries:
+        if e.language.name == "en":
+            last_entry = e.flavor_text
+    last_entry = last_entry.replace("\n", " ")
+    last_entry = last_entry.replace("\u000c", " ")
+    jsonFormat["text_entry"] = last_entry
+
+    json_chunk["abilities"].append(jsonFormat)
+
+print(json.dumps(json_chunk, ensure_ascii=False))
