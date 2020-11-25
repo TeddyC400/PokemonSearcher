@@ -2,6 +2,7 @@
 import pokepy
 import json
 
+poke_id = 0
 for poke_id in range(3):
     poke_id += 1
     pokemon_form = client.get_pokemon_form(poke_id)

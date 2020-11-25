@@ -16,7 +16,8 @@ def getIdFromUrl(url, split_at):
 client = pokepy.V2Client()
 json_chunk = {"pokemon": []}
 
-for poke_id in range(3):
+poke_id = 0
+for poke_id in range(1):
     poke_id += 1
     pokemon = client.get_pokemon(poke_id)
     pokemon_species = client.get_pokemon_species(poke_id)
@@ -53,7 +54,6 @@ for poke_id in range(3):
     # Pokemon Stats
     for e in pokemon.stats:
         tmp = {}
-        tmp["name"] = e.stat.name
         tmp["base_stat"] = e.base_stat
         tmp["effort"] = e.effort
         jsonFormat["stats"].append(tmp)
@@ -92,4 +92,6 @@ for poke_id in range(3):
     #print(json.dumps(jsonFormat, ensure_ascii=False))
     json_chunk["pokemon"].append(jsonFormat)
 
-print(json.dumps(json_chunk, ensure_ascii=False))
+#print(json.dumps(json_chunk, ensure_ascii=False))
+with open("pokemon.json", "w", encoding="utf-8") as outfile:
+    json.dump(json_chunk, outfile, ensure_ascii=False, indent=4)

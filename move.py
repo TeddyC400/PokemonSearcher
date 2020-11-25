@@ -5,6 +5,7 @@ import json
 client = pokepy.V2Client()
 json_chunk = {"moves": []}
 
+poke_id = 0
 for poke_id in range(3):
     poke_id += 1
     move = client.get_move(poke_id)
@@ -43,4 +44,6 @@ for poke_id in range(3):
 
     json_chunk["moves"].append(jsonFormat)
 
-print (json.dumps(json_chunk, ensure_ascii=False))
+#print (json.dumps(json_chunk, ensure_ascii=False))
+with open("move.json", "w", encoding="utf-8") as outfile:
+    json.dump(json_chunk, outfile, ensure_ascii=False, indent=4)
