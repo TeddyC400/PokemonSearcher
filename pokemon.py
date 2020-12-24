@@ -1,5 +1,6 @@
 import pokepy
 import json
+import time
 
 # api link: https://pokeapi.github.io/pokepy/usage/
 
@@ -17,7 +18,7 @@ client = pokepy.V2Client()
 json_chunk = {"pokemon": []}
 
 poke_id = 0
-for poke_id in range(1):
+for i in range(151):
     poke_id += 1
     pokemon = client.get_pokemon(poke_id)
     pokemon_species = client.get_pokemon_species(poke_id)
@@ -92,6 +93,10 @@ for poke_id in range(1):
     #print(json.dumps(jsonFormat, ensure_ascii=False))
     json_chunk["pokemon"].append(jsonFormat)
 
+    time.sleep(0.1)
+
 #print(json.dumps(json_chunk, ensure_ascii=False))
-with open("pokemon.json", "w", encoding="utf-8") as outfile:
+with open("pokemon_data/gen1.json", "w", encoding="utf-8") as outfile:
     json.dump(json_chunk, outfile, ensure_ascii=False, indent=4)
+
+print("End of pokemon data...")

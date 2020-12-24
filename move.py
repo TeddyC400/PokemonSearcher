@@ -1,12 +1,13 @@
 
 import pokepy
 import json
+import time
 
 client = pokepy.V2Client()
 json_chunk = {"moves": []}
 
 poke_id = 0
-for poke_id in range(3):
+for i in range(742):
     poke_id += 1
     move = client.get_move(poke_id)
 
@@ -19,7 +20,6 @@ for poke_id in range(3):
         "priority": move.priority,
         "target": move.target.name,
         "damage_class": move.damage_class.name,
-        "effect_entry": move.effect_entries[0].effect.replace("\n", " "),
         "text_entry": "dev_fill",
         "stat_changes": [],
         "gen_origin": move.generation.name
@@ -44,6 +44,11 @@ for poke_id in range(3):
 
     json_chunk["moves"].append(jsonFormat)
 
+    print(poke_id, end=" ")
+    time.sleep(0.01)
+
 #print (json.dumps(json_chunk, ensure_ascii=False))
-with open("move.json", "w", encoding="utf-8") as outfile:
+with open("pokemon_data/move.json", "w", encoding="utf-8") as outfile:
     json.dump(json_chunk, outfile, ensure_ascii=False, indent=4)
+
+print("End of move data...")

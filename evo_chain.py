@@ -1,13 +1,14 @@
 
 import pokepy
 import json
+import time
 
 client = pokepy.V2Client()
 
 json_chunk = {"evolution_chains": []}
 
 poke_id = 0
-for poke_id in range(3):
+for i in range(78):
     poke_id += 1
     pokemon_evo = client.get_evolution_chain(poke_id)
 
@@ -41,6 +42,10 @@ for poke_id in range(3):
     #print(json.dumps(tmp_1))
     json_chunk["evolution_chains"].append(tmp_1)
 
+    time.sleep(0.01)
+
 #print (json.dumps(json_chunk, ensure_ascii=False))
-with open("evo_chain.json", "w", encoding="utf-8") as outfile:
+with open("pokemon_data/evo_chain.json", "w", encoding="utf-8") as outfile:
     json.dump(json_chunk, outfile, ensure_ascii=False, indent=4)
+
+print("End of evo chain data...")
